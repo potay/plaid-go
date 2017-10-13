@@ -51,7 +51,7 @@ func NewClient(clientID, secret, publicKey string, environment string, suppressW
 	return client
 }
 
-func (c *Client) Post(path string, data interface{}) (map[string]interface{}, error) {
+func (c *Client) Post(path string, data interface{}, respData interface{}) error {
 	// Make a post request with clientID and secret key.
 	postDataType := reflect.StructOf([]reflect.StructField{
 		{
@@ -76,15 +76,15 @@ func (c *Client) Post(path string, data interface{}) (map[string]interface{}, er
 	postData.FieldByName("ClientID").SetString(c.clientID)
 	postData.FieldByName("Secret").SetString(c.secret)
 
-	return c.post(path, postData.Interface())
+	return c.post(path, postData.Interface(), respData)
 }
 
-func (c *Client) PostPublic(path string, data interface{}) (map[string]interface{}, error) {
+func (c *Client) PostPublic(path string, data interface{}, respData interface{}) error {
 	// Make a post request requiring no auth.
-	return c.post(path, data)
+	return c.post(path, data, respData)
 }
 
-func (c *Client) PostPublicKey(path string, data interface{}) (map[string]interface{}, error) {
+func (c *Client) PostPublicKey(path string, data interface{}, respData interface{}) error {
 	// Make a post request using a public key.
 	postDataType := reflect.StructOf([]reflect.StructField{
 		{
@@ -103,17 +103,13 @@ func (c *Client) PostPublicKey(path string, data interface{}) (map[string]interf
 	postData.Field(0).Set(reflect.ValueOf(data))
 	postData.FieldByName("PublicKey").SetString(c.publicKey)
 
-	return c.post(path, postData.Interface())
+	return c.post(path, postData.Interface(), respData)
 }
 
-func (c *Client) post(path string, data interface{}) (map[string]interface{}, error) {
-	respJSON, err := postRequest(
+func (c *Client) post(path string, data interface{}, respData interface{}) error {
+	return postRequest(
 		"https://"+string(c.environment)+".plaid.com"+string(path),
 		data,
-		c.timeout)
-	if err != nil {
-		return nil, err
-	}
-
-	return respJSON.(map[string]interface{}), nil
+		c.timeout,
+		respData)
 }

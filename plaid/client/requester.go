@@ -32,39 +32,38 @@ func requestsHttpRequest(url, method string, data interface{}, timeout time.Dura
 	return nil, fmt.Errorf("Invalid request method %s", method)
 }
 
-func httpRequest(url, method string, data interface{}, timeout time.Duration) (interface{}, error) {
+func httpRequest(url, method string, data interface{}, timeout time.Duration, respData interface{}) error {
 	response, err := requestsHttpRequest(url, method, data, timeout)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	raw, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer response.Body.Close()
 
 	switch {
 	case response.StatusCode == 200:
 		// Successful response.
-		var respData interface{}
-		if err = json.Unmarshal(raw, &respData); err != nil {
-			return nil, err
+		if err = json.Unmarshal(raw, respData); err != nil {
+			return err
 		}
-		return respData, nil
+		return nil
 	case response.StatusCode >= 400:
 		// Attempt to unmarshal into Plaid error format
 		var plaidErr plaidClientError
 		if err = json.Unmarshal(raw, &plaidErr); err != nil {
-			return nil, err
+			return err
 		}
 		plaidErr.StatusCode = response.StatusCode
-		return nil, plaidErr
+		return plaidErr
 	}
 
-	return nil, errors.New("Unknown Plaid Error - Status:" + string(response.StatusCode))
+	return errors.New("Unknown Plaid Error - Status:" + string(response.StatusCode))
 }
 
-func postRequest(url string, data interface{}, timeout time.Duration) (interface{}, error) {
-	return httpRequest(url, "POST", data, timeout)
+func postRequest(url string, data interface{}, timeout time.Duration, respData interface{}) error {
+	return httpRequest(url, "POST", data, timeout, respData)
 }
