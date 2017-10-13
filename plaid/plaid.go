@@ -34,8 +34,14 @@ type Client struct {
 
 type environmentURL string
 
+// Sandbox environment is unrestricted and supports only test Items.
 var Sandbox environmentURL = "https://sandbox.plaid.com"
+
+// Development environment supports up to 100 live Items.
+// All testing should be done in our Sandbox and Development environments.
 var Development environmentURL = "https://development.plaid.com"
+
+// Production environment requests will be billed.
 var Production environmentURL = "https://production.plaid.com"
 
 type Account struct {
