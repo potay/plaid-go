@@ -34,8 +34,9 @@ type Client struct {
 
 type environmentURL string
 
-var Tartan environmentURL = "https://tartan.plaid.com"
-var Production environmentURL = "https://api.plaid.com"
+var Sandbox environmentURL = "https://sandbox.plaid.com"
+var Development environmentURL = "https://development.plaid.com"
+var Production environmentURL = "https://production.plaid.com"
 
 type Account struct {
 	ID      string `json:"_id"`
