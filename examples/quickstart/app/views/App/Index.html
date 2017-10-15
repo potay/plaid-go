@@ -68,32 +68,37 @@
         $('#get-accounts-btn').on('click', function(e) {
             $.get('/accounts', function(data) {
                 $('#get-accounts-data').slideUp(function() {
-                    var html = '';
-                    data.accounts.forEach(function(account, idx) {
-                        html += '<div class="inner">';
-                        html += '<strong>' + account.name +
-                                ' $' + (account.balances.available != null ? account.balances.available : account.balances.current) + '</strong><br>';
-                        html += account.subtype + ' ' + account.mask;
-                        html += '</div>';
-                    });
-
-                    $(this).html(html).slideDown();
+                    if (data.error) {
+                        var errorHtml = '<div class="inner"><p>' +
+                           '<strong>' + data.error.error_code + ':</strong> ' +
+                           data.error.error_message + '</p></div>';
+                        $(this).html(errorHtml).slideDown();
+                    } else {
+                        var html = '';
+                        data.accounts.forEach(function(account, idx) {
+                            html += '<div class="inner">';
+                            html += '<strong>' + account.name +
+                                    ' $' + (account.balances.available != null ? account.balances.available : account.balances.current) + '</strong><br>';
+                            html += account.subtype + ' ' + account.mask;
+                            html += '</div>';
+                        });
+                        $(this).html(errorHtml).slideDown();
+                    }
                 });
             });
         });
 
         $('#get-item-btn').on('click', function(e) {
             $.post('/item', function(data) {
-                console.log(data);
                 $('#get-item-data').slideUp(function() {
                     if(data.error)
                         $(this).html('<p>' + data.error + '</p>').slideDown();
                     else {
                         var html = '<div class="inner">';
                         html += '<p>Here\'s some basic information about your Item:</p>';
-                        html += '<p>Institution name:' + data.institution.name +'</p>';
-                        html += '<p>Billed products: ' + data.item.billed_products.join(', ') + '</p>';
-                        html += '<p>Available products: ' + data.item.available_products.join(', ') + '</p>';
+                        html += '<p><strong>Institution Name:</strong> ' + data.institution.name +'</p>';
+                        html += '<p><strong>Billed Products:</strong> ' + data.item.billed_products.join(', ') + '</p>';
+                        html += '<p><strong>Available Products:</strong> ' + data.item.available_products.join(', ') + '</p>';
                         html += '</div>';
 
                         $(this).html(html).slideDown();
@@ -127,13 +132,17 @@
         } else {
           $('#get-transactions-data').slideUp(function() {
             var html = '';
-            data.transactions.forEach(function(txn, idx) {
-              html += '<div class="inner">';
-              html += '<strong>' + txn.name + '</strong><br>';
-              html += '$' + txn.amount;
-              html += '<br><em>' + txn.date + '</em>';
-              html += '</div>';
-            });
+            if (data.transactions.length > 0) {
+                data.transactions.forEach(function(txn, idx) {
+                  html += '<div class="inner">';
+                  html += '<strong>' + txn.name + '</strong><br>';
+                  html += '$' + txn.amount;
+                  html += '<br><em>' + txn.date + '</em>';
+                  html += '</div>';
+                });
+            } else {
+                html += '<div class="inner"><p>No transactions were found.</p></div>';
+            }
 
             $(this).slideUp(function() {
               $(this).html(html).slideDown();

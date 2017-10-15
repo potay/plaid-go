@@ -39,7 +39,11 @@ func (c App) GetAccessToken() revel.Result {
 	exchangeResponse, err := client.PublicToken.Exchange(publicToken)
 	if err != nil {
 		revel.WARN.Printf("err: %s", err)
-		return c.RenderError(err)
+		return c.RenderJSON(struct {
+			Error error `json:"error"`
+		}{
+			Error: err,
+		})
 	}
 
 	revel.TRACE.Printf("access token: %s", exchangeResponse.AccessToken)
@@ -61,7 +65,11 @@ func (c App) Accounts() revel.Result {
 	response, err := client.Auth.Get(accessToken, nil)
 	if err != nil {
 		revel.WARN.Printf("err: %s", err)
-		return c.RenderError(err)
+		return c.RenderJSON(struct {
+			Error error `json:"error"`
+		}{
+			Error: err,
+		})
 	}
 
 	jsonStr, _ := json.MarshalIndent(response, "", "    ")
@@ -78,13 +86,21 @@ func (c App) Item() revel.Result {
 	itemResponse, err := client.Item.Get(accessToken)
 	if err != nil {
 		revel.WARN.Printf("err: %s", err)
-		return c.RenderError(err)
+		return c.RenderJSON(struct {
+			Error error `json:"error"`
+		}{
+			Error: err,
+		})
 	}
 
 	institutionResponse, err := client.Institutions.GetByID(itemResponse.Item.InstitutionID)
 	if err != nil {
 		revel.WARN.Printf("err: %s", err)
-		return c.RenderError(err)
+		return c.RenderJSON(struct {
+			Error error `json:"error"`
+		}{
+			Error: err,
+		})
 	}
 
 	jsonStr, err := json.MarshalIndent(struct {
@@ -117,7 +133,11 @@ func (c App) Transactions() revel.Result {
 	response, err := client.Transactions.Get(accessToken, startDate, endDate, nil, 500, 0)
 	if err != nil {
 		revel.WARN.Printf("err: %s", err)
-		return c.RenderError(err)
+		return c.RenderJSON(struct {
+			Error error `json:"error"`
+		}{
+			Error: err,
+		})
 	}
 
 	jsonStr, _ := json.MarshalIndent(response, "", "    ")
@@ -134,7 +154,11 @@ func (c App) CreatePublicToken() revel.Result {
 	response, err := client.PublicToken.Create(accessToken)
 	if err != nil {
 		revel.WARN.Printf("err: %s", err)
-		return c.RenderError(err)
+		return c.RenderJSON(struct {
+			Error error `json:"error"`
+		}{
+			Error: err,
+		})
 	}
 
 	jsonStr, _ := json.MarshalIndent(response, "", "    ")
