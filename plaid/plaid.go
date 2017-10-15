@@ -3,13 +3,44 @@ package plaid
 import (
 	"time"
 
-	"github.com/potay/plaid-go/plaid/api"
+	"github.com/potay/plaid-go/plaid/api/accounts"
+	"github.com/potay/plaid-go/plaid/api/auth"
+	"github.com/potay/plaid-go/plaid/api/balance"
+	"github.com/potay/plaid-go/plaid/api/categories"
+	"github.com/potay/plaid-go/plaid/api/credentials"
+	"github.com/potay/plaid-go/plaid/api/credit"
+	"github.com/potay/plaid-go/plaid/api/identity"
+	"github.com/potay/plaid-go/plaid/api/income"
+	"github.com/potay/plaid-go/plaid/api/institutions"
+	"github.com/potay/plaid-go/plaid/api/item"
+	"github.com/potay/plaid-go/plaid/api/processor"
+	"github.com/potay/plaid-go/plaid/api/sandbox"
+	"github.com/potay/plaid-go/plaid/api/tokens"
+	"github.com/potay/plaid-go/plaid/api/transactions"
+	"github.com/potay/plaid-go/plaid/api/webhook"
 	"github.com/potay/plaid-go/plaid/client"
 )
 
 type Plaid struct {
-	client       *client.Client
-	Institutions *api.Institutions
+	client *client.Client
+
+	// Mirror the HTTP API hierarchy
+	AccessToken  tokens.AccessToken
+	Accounts     accounts.Accounts
+	Auth         auth.Auth
+	Balance      balance.Balance
+	Categories   categories.Categories
+	Credentials  credentials.Credentials
+	Credit       credit.Credit
+	Identity     identity.Identity
+	Income       income.Income
+	Institutions institutions.Institutions
+	Item         item.Item
+	Processor    processor.Processor
+	PublicToken  tokens.PublicToken
+	Sandbox      *sandbox.Sandbox
+	Transactions transactions.Transactions
+	Webhook      webhook.Webhook
 }
 
 func NewPlaid(clientID, secret, publicKey string, environment string, suppressWarnings bool, timeout time.Duration) *Plaid {
@@ -24,7 +55,22 @@ func NewPlaid(clientID, secret, publicKey string, environment string, suppressWa
 	client := client.NewClient(clientID, secret, publicKey, environment, suppressWarnings, timeout)
 	plaid := &Plaid{
 		client,
-		api.NewInstitutions(client),
+		tokens.NewAccessToken(client),
+		accounts.NewAccounts(client),
+		auth.NewAuth(client),
+		balance.NewBalance(client),
+		categories.NewCategories(client),
+		credentials.NewCredentials(client),
+		credit.NewCredit(client),
+		identity.NewIdentity(client),
+		income.NewIncome(client),
+		institutions.NewInstitutions(client),
+		item.NewItem(client),
+		processor.NewProcessor(client),
+		tokens.NewPublicToken(client),
+		sandbox.NewSandbox(client),
+		transactions.NewTransactions(client),
+		webhook.NewWebhook(client),
 	}
 
 	return plaid
