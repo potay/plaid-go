@@ -1,7 +1,6 @@
 package client
 
 import (
-	"encoding/json"
 	"reflect"
 	"time"
 
@@ -101,7 +100,6 @@ func (c *Client) PostPublicKey(path string, data interface{}, respData interface
 }
 
 func (c *Client) post(path string, data interface{}, respData interface{}) error {
-	json, _ := json.Marshal(data)
 	return postRequest(
 		"https://"+string(c.environment)+".plaid.com"+string(path),
 		data,

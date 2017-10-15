@@ -11,12 +11,11 @@ import (
 	"time"
 )
 
-var ALLOWED_METHODS = []string{"POST"}
-var DEFAULT_TIMEOUT = 600 // 10 minutes
+var allowedMethods = []string{"POST"}
 
-func requestsHttpRequest(url, method string, data interface{}, timeout time.Duration) (*http.Response, error) {
+func requestsHTTPRequest(url, method string, data interface{}, timeout time.Duration) (*http.Response, error) {
 	normalizedMethod := strings.ToUpper(method)
-	for _, value := range ALLOWED_METHODS {
+	for _, value := range allowedMethods {
 		if value == normalizedMethod {
 			jsonData, err := json.Marshal(data)
 			request, err := http.NewRequest(normalizedMethod, url, bytes.NewBuffer(jsonData))
@@ -33,7 +32,7 @@ func requestsHttpRequest(url, method string, data interface{}, timeout time.Dura
 }
 
 func httpRequest(url, method string, data interface{}, timeout time.Duration, respData interface{}) error {
-	response, err := requestsHttpRequest(url, method, data, timeout)
+	response, err := requestsHTTPRequest(url, method, data, timeout)
 	if err != nil {
 		return err
 	}
