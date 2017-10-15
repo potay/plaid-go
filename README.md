@@ -7,4 +7,11 @@ Install via `go get github.com/potay/plaid-go`.
 **Documentation:** [![GoDoc](https://godoc.org/github.com/potay/plaid-go?status.svg)](https://godoc.org/github.com/potay/plaid-go/plaid)
 
 TODO:
-- Complete other APIs
+- Check possibly deprecated APIs:
+  - Credentials
+  - Credit
+  - Item.CreateResponse
+  - Item.MFAResponse
+  - Processor
+  - Sandbox
+- Add unit tests
