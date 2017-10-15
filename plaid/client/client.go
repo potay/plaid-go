@@ -1,4 +1,3 @@
-// Package plaid implements a Go client for the Plaid API (https://plaid.com/docs)
 package client
 
 import (
@@ -10,11 +9,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Go Plaid API client.
-// See official documentation at: https://plaid.com/docs.
-// All of the endpoints documented under the ``plaid.api``
-// module may be called from a ``plaid.Client`` instance.
-
 type Client struct {
 	clientID         string
 	secret           string
@@ -22,7 +16,6 @@ type Client struct {
 	environment      string
 	suppressWarnings bool
 	timeout          time.Duration
-	// Mirror the HTTP API hierarchy
 }
 
 func NewClient(clientID, secret, publicKey string, environment string, suppressWarnings bool, timeout time.Duration) *Client {

@@ -1,3 +1,4 @@
+// Package plaid implements a Go client for the Plaid API (https://plaid.com/docs)
 package plaid
 
 import (
@@ -20,6 +21,11 @@ import (
 	"github.com/potay/plaid-go/plaid/api/webhook"
 	"github.com/potay/plaid-go/plaid/client"
 )
+
+// Go Plaid API client.
+// See official documentation at: https://plaid.com/docs.
+// All of the endpoints documented under the ``plaid.api``
+// module may be called from a ``plaid.Plaid`` instance.
 
 type Plaid struct {
 	client *client.Client
